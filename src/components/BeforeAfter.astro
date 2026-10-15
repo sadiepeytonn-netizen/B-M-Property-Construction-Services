@@ -1,0 +1,130 @@
+---
+interface Pair { label: string; before: string; after: string; beforeAlt: string; afterAlt: string; }
+interface Props { pairs: Pair[]; eager?: boolean; }
+const { pairs, eager = true } = Astro.props;
+const first = pairs[0];
+---
+<div class="ba" data-ba style="--pos: 50%">
+  <div class="ba__stage">
+    <img class="ba__img ba__after" src={first.after} alt={first.afterAlt} width="1344" height="752"
+      loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} />
+    <img class="ba__img ba__before" src={first.before} alt={first.beforeAlt} width="1344" height="752"
+      loading={eager ? 'eager' : 'lazy'} />
+    <span class="ba__tag ba__tag--before" aria-hidden="true">Before</span>
+    <span class="ba__tag ba__tag--after" aria-hidden="true">After</span>
+
+    <div class="ba__blade" aria-hidden="true">
+      <span class="ba__grip">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M9 6 3 12l6 6V6zm6 0v12l6-6-6-6z"/></svg>
+      </span>
+    </div>
+
+    <label class="sr-only" for="ba-range">Slide to compare before and after</label>
+    <input id="ba-range" class="ba__range" type="range" min="0" max="100" value="50" step="1"
+      aria-valuetext="50% before shown" />
+  </div>
+
+  {pairs.length > 1 && (
+    <div class="ba__tabs" role="group" aria-label="Choose a room">
+      {pairs.map((p, i) => (
+        <button type="button" class="ba__tab" aria-pressed={i === 0 ? 'true' : 'false'}
+          data-before={p.before} data-after={p.after} data-before-alt={p.beforeAlt} data-after-alt={p.afterAlt}>
+          {p.label}
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .ba { position: relative; }
+  .ba__stage {
+    position: relative; overflow: hidden; aspect-ratio: 16 / 9; background: var(--ink);
+    touch-action: pan-y; user-select: none; -webkit-user-select: none;
+  }
+  .ba__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+  .ba__before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+
+  .ba__tag {
+    position: absolute; top: 16px; z-index: 2; padding: 4px 12px; border-radius: 3px;
+    font-weight: 800; font-variation-settings: 'wdth' 112; font-size: .95rem;
+  }
+  .ba__tag--before { left: 16px; background: rgba(19, 40, 58, .85); color: #fff; }
+  .ba__tag--after { right: 16px; background: var(--tape); color: var(--ink); }
+
+  /* The handle is a tape-measure blade */
+  .ba__blade {
+    position: absolute; top: 0; bottom: 0; left: var(--pos); width: 16px; transform: translateX(-50%); z-index: 3;
+    background:
+      repeating-linear-gradient(to bottom, var(--ink) 0 2px, transparent 2px 12px) left / 6px 100% no-repeat,
+      repeating-linear-gradient(to bottom, var(--ink) 0 2px, transparent 2px 48px) left / 10px 100% no-repeat,
+      var(--tape);
+    box-shadow: 0 0 0 1px rgba(19,40,58,.35), 0 0 18px rgba(0,0,0,.35);
+    pointer-events: none;
+  }
+  .ba__grip {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 52px; height: 52px; border-radius: 10px; display: grid; place-items: center;
+    background: var(--ink); color: var(--tape); border: 3px solid var(--tape);
+  }
+
+  .ba__range {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; z-index: 4;
+    -webkit-appearance: none; appearance: none;
+  }
+  .ba__range:focus-visible + * , .ba__stage:has(.ba__range:focus-visible) .ba__grip { outline: 3px solid #fff; outline-offset: 3px; }
+
+  .ba__tabs { display: flex; gap: 8px; padding: 12px 0 0; }
+  .ba__tab {
+    font: inherit; font-weight: 700; padding: .45em 1em; border-radius: var(--radius); cursor: pointer;
+    background: transparent; color: var(--ink); border: 2px solid var(--ink);
+  }
+  .ba__tab[aria-pressed='true'] { background: var(--ink); color: #fff; }
+
+  @media (max-width: 640px) {
+    .ba__stage { aspect-ratio: 4 / 3; }
+    .ba__grip { width: 44px; height: 44px; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ba]').forEach((root) => {
+    const range = root.querySelector<HTMLInputElement>('.ba__range')!;
+    const before = root.querySelector<HTMLImageElement>('.ba__before')!;
+    const after = root.querySelector<HTMLImageElement>('.ba__after')!;
+    const set = (v: number) => {
+      root.style.setProperty('--pos', v + '%');
+      range.value = String(v);
+      range.setAttribute('aria-valuetext', `${Math.round(v)}% before shown`);
+    };
+    range.addEventListener('input', () => set(Number(range.value)));
+
+    // One intro sweep so visitors see it moves.
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      const start = performance.now();
+      const dur = 1400;
+      const from = 88, to = 50;
+      let touched = false;
+      range.addEventListener('pointerdown', () => (touched = true), { once: true });
+      const step = (t: number) => {
+        if (touched) return;
+        const k = Math.min(1, (t - start) / dur);
+        const e = 1 - Math.pow(1 - k, 3);
+        set(from + (to - from) * e);
+        if (k < 1) requestAnimationFrame(step);
+      };
+      setTimeout(() => requestAnimationFrame(step), 350);
+    }
+
+    root.querySelectorAll<HTMLButtonElement>('.ba__tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        root.querySelectorAll('.ba__tab').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+        btn.setAttribute('aria-pressed', 'true');
+        before.src = btn.dataset.before!; before.alt = btn.dataset.beforeAlt!;
+        after.src = btn.dataset.after!; after.alt = btn.dataset.afterAlt!;
+        set(50);
+      });
+    });
+  });
+</script>

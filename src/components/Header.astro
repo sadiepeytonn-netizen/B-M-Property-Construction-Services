@@ -1,0 +1,79 @@
+---
+import { site } from '../data/site';
+import { services } from '../data/services';
+const path = Astro.url.pathname;
+const links = [
+  { href: '/services/', label: 'Services' },
+  { href: '/service-areas/', label: 'Service areas' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
+---
+<header class="hdr">
+  <div class="wrap hdr__in">
+    <a class="brand" href="/" aria-label={`${site.name} home`}>
+      <!-- Replace with the logo: <img src="/logo.svg" alt="B&M Property Construction Services" width="160" height="48" /> -->
+      <span class="brand__mark" aria-hidden="true">B&amp;M</span>
+      <span class="brand__name">Property Construction<br />Services</span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {links.map((l) => (
+          <li><a href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="btn btn--tape hdr__call" href={site.phoneHref}>
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+      <span>{site.phone}</span>
+    </a>
+
+    <details class="menu">
+      <summary aria-label="Open menu"><span></span><span></span><span></span></summary>
+      <div class="menu__panel">
+        <a href="/">Home</a>
+        {links.map((l) => <a href={l.href}>{l.label}</a>)}
+        <div class="menu__sub">
+          {services.map((s) => <a href={`/services/${s.slug}/`}>{s.name}</a>)}
+        </div>
+        <a class="btn btn--tape" href={site.phoneHref}>Call {site.phone}</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  .hdr { background: var(--ink); color: #fff; position: sticky; top: 0; z-index: 50; }
+  .hdr__in { display: flex; align-items: center; gap: 24px; min-height: 72px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; margin-right: auto; }
+  .brand__mark {
+    font-weight: 900; font-variation-settings: 'wdth' 125; font-size: 1.6rem; letter-spacing: -.03em;
+    background: var(--tape); color: var(--ink); padding: 2px 8px; border-radius: 3px; line-height: 1.2;
+  }
+  .brand__name { font-size: .78rem; line-height: 1.15; font-weight: 600; color: #c9d6de; font-variation-settings: 'wdth' 90; }
+  .nav ul { list-style: none; display: flex; gap: 28px; margin: 0; padding: 0; }
+  .nav a { color: #dfe7ec; text-decoration: none; font-weight: 600; padding: 6px 0; border-bottom: 2px solid transparent; }
+  .nav a:hover, .nav a[aria-current] { color: #fff; border-bottom-color: var(--tape); }
+  .hdr__call { min-height: 42px; padding: .5em 1em; }
+
+  .menu { display: none; position: relative; }
+  .menu summary { list-style: none; cursor: pointer; width: 44px; height: 44px; display: grid; place-content: center; gap: 5px; }
+  .menu summary::-webkit-details-marker { display: none; }
+  .menu summary span { display: block; width: 24px; height: 2px; background: #fff; }
+  .menu__panel {
+    position: fixed; left: 0; right: 0; top: 72px; background: var(--ink); padding: 8px 16px 24px;
+    display: grid; gap: 2px; max-height: calc(100vh - 72px); overflow: auto; border-top: 1px solid #2a4357;
+  }
+  .menu__panel > a:not(.btn) { color: #fff; text-decoration: none; font-weight: 700; font-size: 1.15rem; padding: 12px 0; }
+  .menu__sub { display: grid; padding: 0 0 8px 14px; border-left: 2px solid var(--tape); margin-bottom: 12px; }
+  .menu__sub a { color: #c9d6de; text-decoration: none; padding: 7px 0; }
+
+  @media (max-width: 900px) {
+    .nav { display: none; }
+    .menu { display: block; }
+    .hdr__call span { display: none; }
+    .hdr__call { padding: .5em .75em; }
+  }
+</style>

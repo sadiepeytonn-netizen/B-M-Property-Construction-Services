@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base title="Page not found | B&M Property Construction Services" description="This page does not exist." noindex>
+  <section class="section">
+    <div class="wrap">
+      <h1>That page does not exist</h1>
+      <p class="lede">It may have moved. Try the <a href="/services/">services page</a>, or call <a href={site.phoneHref}>{site.phone}</a>.</p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import MapEmbed from '../../components/MapEmbed.astro';
+import { site } from '../../data/site';
+import { areas } from '../../data/areas';
+import { breadcrumbSchema } from '../../data/faqs';
+---
+<Base
+  title="Service Areas: Brevard County & Orlando | B&M"
+  description="We remodel and repair homes in Titusville, Mims, Port St. John, Cocoa, Merritt Island, Rockledge, Oviedo, Winter Park, Orlando and Clermont, FL."
+  schema={[breadcrumbSchema(site.url, [{ name: 'Home', path: '/' }, { name: 'Service areas', path: '/service-areas/' }])]}
+>
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">Service areas</li></ol></nav>
+      <h1>Where we work</h1>
+      <p>Based in Titusville. Across Brevard County every week, and out to the Orlando area for remodels.</p>
+    </div>
+  </header>
+  <section class="section">
+    <div class="wrap two">
+      <ul class="list">
+        {areas.map((a) => (
+          <li>
+            <a href={`/service-areas/${a.slug}/`}>{a.name}</a>
+            <span>{a.county}</span>
+            <span>{a.drive}</span>
+          </li>
+        ))}
+      </ul>
+      <MapEmbed query="Titusville to Orlando, FL" zoom={8} title="Map of our service area from Titusville to Orlando" />
+    </div>
+  </section>
+</Base>
+<style>
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .list { list-style: none; padding: 0; margin: 0; border-top: 2px solid var(--ink); }
+  .list li { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .list a { font-weight: 700; font-size: 1.1rem; }
+  .list span { color: var(--muted); font-size: .92rem; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+</style>

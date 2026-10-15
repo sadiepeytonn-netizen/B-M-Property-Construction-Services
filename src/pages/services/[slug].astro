@@ -1,0 +1,103 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import Faq from '../../components/Faq.astro';
+import { site } from '../../data/site';
+import { services, type Service } from '../../data/services';
+import { areas } from '../../data/areas';
+import { faqSchema, breadcrumbSchema } from '../../data/faqs';
+import { imgPath } from '../../data/images';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props as { s: Service };
+const others = services.filter((o) => o.slug !== s.slug);
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: s.name,
+  serviceType: s.name,
+  description: s.description,
+  url: `${site.url}/services/${s.slug}/`,
+  provider: { '@id': `${site.url}/#business` },
+  areaServed: areas.map((a) => ({ '@type': 'City', name: `${a.name}, FL` })),
+};
+---
+<Base
+  title={`${s.title} | ${site.shortName}`}
+  description={s.description}
+  image={imgPath(s.image)}
+  schema={[
+    serviceSchema,
+    faqSchema(s.faqs),
+    breadcrumbSchema(site.url, [
+      { name: 'Home', path: '/' },
+      { name: 'Services', path: '/services/' },
+      { name: s.name, path: `/services/${s.slug}/` },
+    ]),
+  ]}
+>
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/services/">Services</a></li><li aria-current="page">{s.name}</li></ol></nav>
+      <h1>{s.title}</h1>
+      <p>{s.short} Serving Titusville, Brevard County and the Orlando area.</p>
+      <a class="btn btn--tape" href="#estimate">Get a free estimate</a>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap svc">
+      <div class="prose">
+        {s.intro.map((p) => <p>{p}</p>)}
+        <h2>What this includes</h2>
+        <ul class="ticks">{s.includes.map((i) => <li>{i}</li>)}</ul>
+        <h2>Where we do {s.name.toLowerCase()}</h2>
+        <p>
+          We are based in Titusville and do {s.name.toLowerCase()} throughout Brevard County and the Orlando area, including{' '}
+          {areas.map((a, i) => (
+            <>
+              <a href={`/service-areas/${a.slug}/`}>{a.name}</a>{i < areas.length - 2 ? ', ' : i === areas.length - 2 ? ' and ' : '.'}
+            </>
+          ))}
+        </p>
+      </div>
+      <figure class="svc__img">
+        <img src={imgPath(s.image)} alt={s.imageAlt} width="1344" height="900" />
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--tile">
+    <div class="wrap">
+      <h2>{s.name}: common questions</h2>
+      <Faq items={s.faqs} />
+    </div>
+  </section>
+
+  <section class="section" id="estimate">
+    <div class="wrap est">
+      <div>
+        <h2>Get a free estimate</h2>
+        <p>Tell us about the job and we will set up a time to see it. Or call <a href={site.phoneHref}>{site.phone}</a>.</p>
+        <h3 class="more">Other services</h3>
+        <ul class="more__list">{others.map((o) => <li><a href={`/services/${o.slug}/`}>{o.name}</a></li>)}</ul>
+      </div>
+      <ContactForm service={s.name} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .svc { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .svc__img { margin: 0; position: sticky; top: 96px; }
+  .svc__img img { border-radius: var(--radius); aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+  .est { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(28px, 5vw, 64px); }
+  .more { margin-top: 2em; }
+  .more__list { padding-left: 1.1em; display: grid; gap: .3em; }
+  @media (max-width: 900px) {
+    .svc, .est { grid-template-columns: 1fr; }
+    .svc__img { position: static; order: -1; }
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+import { site } from '../data/site';
+import { services } from '../data/services';
+import { areas } from '../data/areas';
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div>
+      <p class="ftr__name">{site.name}</p>
+      <p>Kitchen and bathroom remodeling, flooring and home repairs. Based in Titusville, working across Brevard County and the Orlando area.</p>
+      <p>
+        <a href={site.phoneHref}>{site.phone}</a><br />
+        <a href={`mailto:${site.email}`}>{site.email}</a><br />
+        {site.city}, {site.region}
+      </p>
+      <p class="ftr__lic">Licensed &amp; insured{site.licenseNumber && <> · License #{site.licenseNumber}</>}</p>
+    </div>
+    <nav aria-label="Services">
+      <p class="ftr__h">Services</p>
+      <ul>{services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.name}</a></li>)}</ul>
+    </nav>
+    <nav aria-label="Service areas">
+      <p class="ftr__h">Service areas</p>
+      <ul>{areas.map((a) => <li><a href={`/service-areas/${a.slug}/`}>{a.name}</a></li>)}</ul>
+    </nav>
+    <div>
+      <p class="ftr__h">Find us</p>
+      <ul>
+        <li><a href={site.googleProfile} rel="noopener" target="_blank">Google reviews</a></li>
+        <li><a href={site.facebook} rel="noopener" target="_blank">Facebook</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Request an estimate</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap ftr__base">© {year} {site.legalName}</div>
+</footer>
+
+<style>
+  .ftr { background: var(--ink); color: #b9c8d1; font-size: .95rem; padding-top: 64px; }
+  .ftr a { color: #e3ecf0; text-decoration: none; }
+  .ftr a:hover { color: var(--tape); }
+  .ftr__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
+  .ftr__name { color: #fff; font-weight: 800; font-variation-settings: var(--wide); font-size: 1.15rem; }
+  .ftr__h { color: #fff; font-weight: 700; margin-bottom: .6em; }
+  .ftr ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .35em; }
+  .ftr__lic { color: var(--tape); font-weight: 600; }
+  .ftr__base { border-top: 1px solid #2a4357; margin-top: 48px; padding-top: 20px; padding-bottom: 28px; font-size: .85rem; }
+  @media (max-width: 860px) { .ftr__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .ftr__grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,213 @@
+---
+import Base from '../layouts/Base.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Faq from '../components/Faq.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import { site } from '../data/site';
+import { services } from '../data/services';
+import { areas } from '../data/areas';
+import { homeFaqs, faqSchema } from '../data/faqs';
+import { img, imgPath } from '../data/images';
+
+const pairs = [
+  { label: 'Kitchen', before: img('kitchen-before'), after: img('kitchen-after'),
+    beforeAlt: 'Dated 1980s kitchen with oak cabinets and laminate counters before remodeling',
+    afterAlt: 'The same kitchen after remodeling with white shaker cabinets and quartz counters' },
+  { label: 'Bathroom', before: img('bath-before'), after: img('bath-after'),
+    beforeAlt: 'Dated bathroom with pink tile and a fiberglass tub before remodeling',
+    afterAlt: 'The same bathroom after remodeling with a glass walk-in shower and double vanity' },
+];
+const [kitchen, bath, ...rest] = services;
+const brevard = areas.filter((a) => a.county === 'Brevard County');
+const orlando = areas.filter((a) => a.county !== 'Brevard County');
+---
+<Base
+  title="Kitchen & Bath Remodeling in Titusville, FL | B&M"
+  description="Kitchen and bathroom remodeling, flooring and home repairs in Titusville, Brevard County and Orlando. Licensed & insured. Free estimates: (321) 890-7839."
+  schema={[faqSchema(homeFaqs)]}
+>
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <h1>Kitchen and bathroom remodeling in Titusville, FL</h1>
+        <p>Plus flooring, drywall, carpentry and the repair list you have been putting off. Based in Titusville, working from Mims to Orlando.</p>
+        <div class="hero__ctas">
+          <a class="btn btn--tape" href="/contact/">Get a free estimate</a>
+          <a class="btn btn--ghost" href={site.phoneHref}>Call {site.phone}</a>
+        </div>
+      </div>
+      <div class="hero__ba">
+        <BeforeAfter pairs={pairs} />
+        <p class="hero__hint">Drag the tape to compare.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="facts" aria-label="Why homeowners call us">
+    <div class="wrap facts__row">
+      <p><strong>Licensed &amp; insured</strong>Florida contractor</p>
+      <p><a href={site.googleProfile} target="_blank" rel="noopener"><strong>{site.googleRating} on Google</strong>Read our reviews</a></p>
+      <p><strong>Based in Titusville</strong>Brevard County to Orlando</p>
+      <p><strong>Free written estimates</strong>No obligation</p>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="wrap">
+      <h2>What we do</h2>
+      <p class="lede">We focus on the rooms and repairs homeowners actually need — not new construction. One crew, one point of contact, start to finish.</p>
+
+      <div class="svc-feature">
+        {[kitchen, bath].map((s) => (
+          <a class="svc-big" href={`/services/${s.slug}/`}>
+            <img src={imgPath(s.image)} alt={s.imageAlt} width="1344" height="752" loading="lazy" />
+            <span class="svc-big__body">
+              <h3>{s.name}</h3>
+              <span>{s.short}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <div class="svc-list">
+        {rest.map((s) => (
+          <a class="svc-sm" href={`/services/${s.slug}/`}>
+            <img src={imgPath(s.image)} alt={s.imageAlt} width="1168" height="880" loading="lazy" />
+            <h3>{s.name}</h3>
+            <span>{s.short}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tile">
+    <div class="wrap">
+      <h2>How a job goes</h2>
+      <ol class="steps">
+        <li><h3>You call or send the form</h3><p>Tell us what is going on. Photos help, but are not required.</p></li>
+        <li><h3>We walk the space</h3><p>We look at the room, talk through options and send you a written quote.</p></li>
+        <li><h3>We do the work</h3><p>You get a start date and a schedule. We protect your floors and clean up each day.</p></li>
+        <li><h3>Final walkthrough</h3><p>We go over everything with you and fix anything that is not right before we call it done.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="areas">
+    <div class="wrap areas">
+      <div>
+        <h2>Where we work</h2>
+        <p>Home base is Titusville. We work across Brevard County every week and travel to the Orlando area for remodels.</p>
+        <div class="areas__cols">
+          <div>
+            <h3>Brevard County</h3>
+            <ul>{brevard.map((a) => <li><a href={`/service-areas/${a.slug}/`}>{a.name}</a><span>{a.drive}</span></li>)}</ul>
+          </div>
+          <div>
+            <h3>Orlando area</h3>
+            <ul>{orlando.map((a) => <li><a href={`/service-areas/${a.slug}/`}>{a.name}</a><span>{a.drive}</span></li>)}</ul>
+          </div>
+        </div>
+      </div>
+      <MapEmbed query="Titusville, FL" zoom={9} title="Map of our service area around Titusville, Florida" />
+    </div>
+  </section>
+
+  <section class="section section--tile">
+    <div class="wrap">
+      <h2>Common questions</h2>
+      <Faq items={homeFaqs} />
+    </div>
+  </section>
+
+  <section class="section" id="estimate">
+    <div class="wrap est">
+      <div>
+        <h2>Get a free estimate</h2>
+        <p>Send a few details and we will get back to you to set up a time to see the space. For anything urgent, call.</p>
+        <p class="est__phone"><a href={site.phoneHref}>{site.phone}</a></p>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+      <ContactForm />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { background: var(--ink); color: #d6e1e7; padding: clamp(32px, 5vw, 64px) 0 clamp(40px, 6vw, 72px); }
+  .hero__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 4vw, 56px); align-items: center; }
+  .hero h1 { color: #fff; font-size: clamp(2.3rem, 4.6vw, 3.9rem); }
+  .hero__copy p { font-size: 1.15rem; }
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  .hero__ctas .btn--ghost { color: #fff; }
+  .hero__ba :global(.ba__tab) { color: #fff; border-color: #4b6578; }
+  .hero__ba :global(.ba__tab[aria-pressed='true']) { background: var(--tape); color: var(--ink); border-color: var(--tape); }
+  .hero__ba :global(.ba__tabs) { float: left; }
+  .hero__hint { text-align: right; font-size: .9rem; color: #8fa5b3; margin: 14px 0 0; max-width: none; }
+
+  .facts { border-bottom: 1px solid var(--line); }
+  .facts__row { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .facts p { margin: 0; padding: 22px 16px; color: var(--muted); font-size: .95rem; }
+  .facts p + p { border-left: 1px solid var(--line); }
+  .facts strong { display: block; color: var(--ink); font-size: 1.05rem; font-variation-settings: 'wdth' 110; }
+  .facts a { color: inherit; text-decoration: none; }
+  .facts a:hover strong { color: var(--river); }
+
+  .svc-feature { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0 24px; }
+  .svc-big { position: relative; display: block; color: #fff; text-decoration: none; border-radius: var(--radius); overflow: hidden; aspect-ratio: 16 / 10; }
+  .svc-big img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .svc-big:hover img { transform: scale(1.03); }
+  .svc-big__body {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 60px 24px 22px; display: grid; gap: 4px;
+    background: linear-gradient(transparent, rgba(19,40,58,.92));
+  }
+  .svc-big h3 { color: #fff; font-size: clamp(1.4rem, 2.4vw, 1.9rem); margin: 0; }
+  .svc-big:hover h3 { text-decoration: underline; text-decoration-color: var(--tape); text-underline-offset: 5px; }
+
+  .svc-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .svc-sm { color: var(--text); text-decoration: none; display: grid; align-content: start; gap: 6px; }
+  .svc-sm img { aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); margin-bottom: 8px; }
+  .svc-sm h3 { margin: 0; font-size: 1.15rem; }
+  .svc-sm span { color: var(--muted); font-size: .95rem; }
+  .svc-sm:hover h3 { color: var(--river); }
+
+  .steps { list-style: none; counter-reset: s; padding: 0; margin: 32px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .steps li { counter-increment: s; padding: 0 24px 0 0; position: relative; }
+  .steps li::before {
+    content: counter(s); display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 16px;
+    background: var(--ink); color: var(--tape); font-weight: 900; font-variation-settings: var(--wide); font-size: 1.2rem; border-radius: 50%;
+  }
+  .steps li:not(:last-child)::after {
+    content: ''; position: absolute; top: 22px; left: 52px; right: 8px; height: 2px;
+    background: repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 12px);
+  }
+  .steps p { color: var(--muted); font-size: .98rem; }
+
+  .areas { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .areas__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 20px; }
+  .areas ul { list-style: none; padding: 0; margin: 0; }
+  .areas li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .areas li a { font-weight: 600; }
+  .areas li span { color: var(--muted); font-size: .88rem; text-align: right; }
+
+  .est { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(28px, 5vw, 64px); }
+  .est__phone { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 850; font-variation-settings: var(--wide); margin: 1em 0 .2em; }
+  .est__phone a { color: var(--ink); text-decoration: none; }
+
+  @media (max-width: 960px) {
+    .hero__grid, .areas, .est { grid-template-columns: 1fr; }
+    .svc-list { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; gap: 32px 0; }
+    .steps li::after { display: none; }
+    .facts__row { grid-template-columns: 1fr 1fr; }
+    .facts p:nth-child(3) { border-left: 0; }
+    .facts p:nth-child(n+3) { border-top: 1px solid var(--line); }
+  }
+  @media (max-width: 600px) {
+    .svc-feature { grid-template-columns: 1fr; }
+    .svc-list { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .areas__cols { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,104 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import MapEmbed from '../../components/MapEmbed.astro';
+import { site } from '../../data/site';
+import { services } from '../../data/services';
+import { areas, getArea, type Area } from '../../data/areas';
+import { breadcrumbSchema, faqSchema } from '../../data/faqs';
+
+export function getStaticPaths() {
+  return areas.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+}
+const { a } = Astro.props as { a: Area };
+const nearby = a.nearby.map((n) => areas.find((x) => x.name === n)).filter(Boolean) as Area[];
+const isHome = a.slug === 'titusville';
+const faqs = [
+  {
+    q: `Do you work in ${a.name}, FL?`,
+    a: isHome
+      ? 'Yes. We are based in Titusville, so most of our work is here and we can usually schedule a walkthrough within a few days.'
+      : `Yes. We are based in Titusville (${a.drive.toLowerCase()} away) and regularly take on remodeling and repair work in ${a.name}.`,
+  },
+  {
+    q: `What services do you offer in ${a.name}?`,
+    a: `In ${a.name} we do ${services.map((s) => s.name.toLowerCase()).join(', ')}.`,
+  },
+  {
+    q: `How do I get an estimate in ${a.name}?`,
+    a: `Call (321) 890-7839 or use the form on this page. We will set up a time to see the space and send a written quote at no charge.`,
+  },
+];
+---
+<Base
+  title={`Remodeling & Home Repair in ${a.name}, FL | ${site.shortName}`}
+  description={`Kitchen and bath remodeling, flooring, drywall and home repairs in ${a.name}, FL. Licensed & insured. Free estimates: (321) 890-7839.`}
+  schema={[
+    faqSchema(faqs),
+    breadcrumbSchema(site.url, [
+      { name: 'Home', path: '/' },
+      { name: 'Service areas', path: '/service-areas/' },
+      { name: a.name, path: `/service-areas/${a.slug}/` },
+    ]),
+  ]}
+>
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/service-areas/">Service areas</a></li><li aria-current="page">{a.name}</li></ol></nav>
+      <h1>Remodeling and home repair in {a.name}, FL</h1>
+      <p>{a.intro}</p>
+      <a class="btn btn--tape" href="#estimate">Get a free estimate</a>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap two">
+      <div class="prose">
+        <h2>Homes in {a.name}</h2>
+        <p>{a.homes}</p>
+        <h2>Services in {a.name}</h2>
+        <ul class="svc-links">
+          {services.map((s) => (
+            <li><a href={`/services/${s.slug}/`}>{s.name} in {a.name}</a><span>{s.short}</span></li>
+          ))}
+        </ul>
+        <p class="meta">
+          {a.county} · ZIP codes we serve include {a.zips.join(', ')} · {isHome ? 'Our home base' : `${a.drive} from Titusville`}
+        </p>
+      </div>
+      <MapEmbed query={`${a.name}, FL`} zoom={11} title={`Map of ${a.name}, Florida`} />
+    </div>
+  </section>
+
+  <section class="section section--tile">
+    <div class="wrap">
+      <h2>Questions from {a.name} homeowners</h2>
+      <div class="faq">
+        {faqs.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+      {nearby.length > 0 && (
+        <p class="nearby">Also nearby: {nearby.map((n, i) => <><a href={`/service-areas/${n.slug}/`}>{n.name}</a>{i < nearby.length - 1 ? ', ' : ''}</>)}</p>
+      )}
+    </div>
+  </section>
+
+  <section class="section" id="estimate">
+    <div class="wrap two">
+      <div>
+        <h2>Free estimates in {a.name}</h2>
+        <p>Send a few details, or call <a href={site.phoneHref}>{site.phone}</a>.</p>
+      </div>
+      <ContactForm city={a.name} />
+    </div>
+  </section>
+</Base>
+<style>
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .svc-links { list-style: none; padding: 0; margin: 0 0 1.5em; }
+  .svc-links li { padding: 12px 0; border-bottom: 1px solid var(--line); display: grid; gap: 2px; }
+  .svc-links a { font-weight: 700; }
+  .svc-links span { color: var(--muted); font-size: .95rem; }
+  .meta { color: var(--muted); font-size: .92rem; }
+  .nearby { margin-top: 28px; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+</style>

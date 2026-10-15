@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import { breadcrumbSchema } from '../data/faqs';
+import { img } from '../data/images';
+---
+<Base
+  title="About B&M Property Construction Services | Titusville, FL"
+  description="B&M Property Construction Services is a licensed, insured remodeling and repair company in Titusville, FL, serving Brevard County and Orlando."
+  schema={[breadcrumbSchema(site.url, [{ name: 'Home', path: '/' }, { name: 'About', path: '/about/' }])]}
+>
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">About</li></ol></nav>
+      <h1>A Titusville crew that sticks to homes</h1>
+      <p>We came up doing commercial construction. Now we put that experience into kitchens, bathrooms and repairs for homeowners.</p>
+    </div>
+  </header>
+  <section class="section">
+    <div class="wrap two">
+      <div class="prose">
+        <!-- Add the owner's name, photo and a few lines of his story here once we have them. -->
+        <p>B&amp;M Property Construction Services is a licensed and insured Florida contractor based in Titusville. Our background is in commercial work — tenant buildouts, retail spaces and remodels — where schedules are tight and inspections are strict.</p>
+        <p>We have shifted our focus to homeowners. We do not build new houses. We remodel kitchens and bathrooms, install flooring, repair drywall, hang doors and trim, and take care of the repair lists that pile up in every house.</p>
+        <h2>How we work</h2>
+        <ul class="ticks">
+          <li>A written quote before any work starts</li>
+          <li>One point of contact from walkthrough to final cleanup</li>
+          <li>Floors and furniture protected, job site cleaned daily</li>
+          <li>Permits pulled when the job calls for them</li>
+          <li>Licensed trade partners for specialty electrical and plumbing work</li>
+        </ul>
+        <p><a class="btn btn--ink" href="/contact/">Get a free estimate</a></p>
+      </div>
+      <img src={img('kitchen-after')} alt="Finished kitchen remodel" width="1344" height="752" loading="lazy" />
+    </div>
+  </section>
+</Base>
+<style>
+  .two { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .two img { border-radius: var(--radius); aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+</style>

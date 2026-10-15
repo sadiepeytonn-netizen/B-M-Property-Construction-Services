@@ -1,0 +1,53 @@
+---
+import { site } from '../data/site';
+import { services } from '../data/services';
+import { areas } from '../data/areas';
+interface Props { service?: string; city?: string; }
+const { service, city } = Astro.props;
+---
+<form class="cf" action={site.formAction} method="POST">
+  <input type="hidden" name="_subject" value="New estimate request from the website" />
+  <input type="hidden" name="_next" value={`${site.url}/thanks/`} />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_captcha" value="false" />
+  <input type="text" name="_honey" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+  <div class="cf__row">
+    <label>Name<input name="name" required autocomplete="name" /></label>
+    <label>Phone<input name="phone" type="tel" required autocomplete="tel" inputmode="tel" /></label>
+  </div>
+  <label>Email<input name="email" type="email" autocomplete="email" /></label>
+  <div class="cf__row">
+    <label>City
+      <select name="city">
+        {areas.map((a) => <option selected={a.name === city}>{a.name}</option>)}
+        <option>Other</option>
+      </select>
+    </label>
+    <label>What do you need?
+      <select name="service">
+        {services.map((s) => <option selected={s.name === service}>{s.name}</option>)}
+        <option>Something else</option>
+      </select>
+    </label>
+  </div>
+  <label>Tell us about the job
+    <textarea name="message" rows="5" placeholder="Which room, what you want changed, and roughly when."></textarea>
+  </label>
+  <button class="btn btn--ink" type="submit">Request a free estimate</button>
+  <p class="cf__note">Prefer to talk? Call <a href={site.phoneHref}>{site.phone}</a>.</p>
+</form>
+
+<style>
+  .cf { display: grid; gap: 16px; }
+  .cf__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cf label { display: grid; gap: 6px; font-weight: 600; color: var(--ink); font-size: .95rem; }
+  .cf input:not(.sr-only), .cf select, .cf textarea {
+    font: inherit; font-weight: 400; color: var(--text); background: #fff;
+    border: 1.5px solid var(--line); border-radius: var(--radius); padding: .7em .8em; min-height: 48px; width: 100%;
+  }
+  .cf input:focus, .cf select:focus, .cf textarea:focus { outline: none; border-color: var(--river); box-shadow: 0 0 0 3px rgba(29,107,115,.2); }
+  .cf button { justify-self: start; }
+  .cf__note { font-size: .92rem; color: var(--muted); margin: 0; }
+  @media (max-width: 560px) { .cf__row { grid-template-columns: 1fr; } .cf button { justify-self: stretch; } }
+</style>
