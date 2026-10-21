@@ -1,44 +1,61 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { site } from '../../data/site';
-import { services } from '../../data/services';
+import { residentialServices, commercialServices } from '../../data/services';
+const groups = [
+  { id: 'home', heading: 'For homeowners', items: residentialServices },
+  { id: 'commercial', heading: 'Commercial', items: commercialServices },
+];
 import { breadcrumbSchema } from '../../data/faqs';
 import { imgPath } from '../../data/images';
 ---
 <Base
-  title="Remodeling & Home Repair Services | B&M Titusville"
-  description="Kitchen remodeling, bathroom remodeling, flooring, drywall and painting, carpentry and home repairs in Titusville, Brevard County and Orlando. Call (321) 890-7839."
+  title="Remodeling, Repair & Commercial Services | B&M"
+  description="Kitchen and bath remodeling, flooring, drywall, carpentry and home repairs, plus commercial framing and finishing in Brevard County and Orlando. (321) 890-7839."
   schema={[breadcrumbSchema(site.url, [{ name: 'Home', path: '/' }, { name: 'Services', path: '/services/' }])]}
 >
   <header class="page-head">
     <div class="wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">Services</li></ol></nav>
       <h1>Remodeling and home repair services</h1>
-      <p>We do the rooms and repairs homeowners need most. If your job is not listed, call — chances are we do it.</p>
+      <p>Remodeling and repairs for homeowners, plus interior framing, finishing and maintenance for commercial spaces. If your job is not listed, call. Chances are we do it.</p>
     </div>
   </header>
-  <section class="section">
-    <div class="wrap rows">
-      {services.map((s) => (
-        <article class="row">
-          <img src={imgPath(s.image)} alt={s.imageAlt} width="1168" height="880" loading="lazy" />
-          <div>
-            <h2><a href={`/services/${s.slug}/`}>{s.name}</a></h2>
-            <p>{s.intro[0]}</p>
-            <ul class="ticks">{s.includes.slice(0, 4).map((i) => <li>{i}</li>)}</ul>
-            <a class="btn btn--ink" href={`/services/${s.slug}/`}>More on {s.name.toLowerCase()}</a>
-          </div>
-        </article>
-      ))}
-    </div>
-  </section>
+  <nav class="wrap jump" aria-label="Service groups">
+    {groups.map((g) => <a href={`#${g.id}`}>{g.heading}</a>)}
+  </nav>
+  {groups.map((g, gi) => (
+    <section class:list={['section', { 'section--tile': gi === 1 }]} id={g.id}>
+      <div class="wrap">
+        <h2 class="group-h">{g.heading}</h2>
+        <div class="rows">
+          {g.items.map((s) => (
+            <article class="row">
+              <img src={imgPath(s.image)} alt={s.imageAlt} width="1168" height="880" loading="lazy" />
+              <div>
+                <h3><a href={`/services/${s.slug}/`}>{s.name}</a></h3>
+                <p>{s.intro[0]}</p>
+                <ul class="ticks">{s.includes.slice(0, 4).map((i) => <li>{i}</li>)}</ul>
+                <a class="btn btn--ink" href={`/services/${s.slug}/`}>More on {s.name.toLowerCase()}</a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
 </Base>
 <style>
   .rows { display: grid; gap: 64px; }
   .row { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(24px, 4vw, 48px); align-items: center; }
   .row:nth-child(even) img { order: 2; }
   .row img { aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); width: 100%; }
-  .row h2 a { color: var(--ink); text-decoration: none; }
-  .row h2 a:hover { color: var(--river); }
+  .row h3 { font-size: clamp(1.4rem, 2.4vw, 1.8rem); }
+  .row h3 a { color: var(--ink); text-decoration: none; }
+  .row h3 a:hover { color: var(--river); }
+  .group-h { padding-bottom: .4em; border-bottom: 2px solid var(--ink); margin-bottom: 40px; }
+  .jump { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 24px; padding-bottom: 0; }
+  .jump a { font-weight: 700; padding: .4em 1em; border: 2px solid var(--ink); border-radius: var(--radius); color: var(--ink); text-decoration: none; }
+  .jump a:hover { background: var(--ink); color: #fff; }
   @media (max-width: 800px) { .row { grid-template-columns: 1fr; } .row:nth-child(even) img { order: 0; } }
 </style>

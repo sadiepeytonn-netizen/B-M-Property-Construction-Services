@@ -1,5 +1,6 @@
 export type Service = {
   slug: string;
+  category?: 'residential' | 'commercial'; // defaults to residential
   name: string;
   short: string;
   title: string;
@@ -207,5 +208,115 @@ export const services: Service[] = [
     ],
   },
 ];
+
+// ── Commercial ──────────────────────────────────────────────
+services.push(
+  {
+    slug: 'commercial-repairs-maintenance',
+    category: 'commercial',
+    name: 'Commercial repairs & maintenance',
+    short: 'Ceiling tile, doors and hardware, drywall patches, paint and punch lists.',
+    title: 'Commercial Handyman & Maintenance in Brevard & Orlando',
+    description:
+      'Commercial repairs and maintenance for offices, retail and property managers in Titusville, Brevard County and Orlando. Punch lists, doors, ceilings, drywall. (321) 890-7839.',
+    image: '/images/commercial-maintenance.jpg',
+    imageAlt: 'Ladder under an open ceiling tile in an office hallway with a tool cart',
+    intro: [
+      'Offices, retail units and rental buildings collect the same small problems: a door that will not latch, stained ceiling tiles, holes in the hallway drywall, a bathroom grab bar that came loose. We take care of that list so your space looks right and works for the people using it.',
+      'We work with property managers, business owners and building owners on one-off calls, tenant turnovers and recurring maintenance lists.',
+    ],
+    includes: [
+      'Acoustic ceiling tile and grid repair',
+      'Commercial doors, closers, hinges and hardware',
+      'Drywall patching and paint touch-ups',
+      'Restroom fixtures, partitions and grab bars',
+      'Tenant turnover and move-out repairs',
+      'Punch lists for property managers',
+    ],
+    faqs: [
+      {
+        q: 'Do you work with property managers?',
+        a: 'Yes. Send the list of units and items, and we will quote it and work through it. We can also handle turnover repairs between tenants.',
+      },
+      {
+        q: 'Can you work around our business hours?',
+        a: 'Tell us when the space is open and when it is not, and we will plan the schedule around it so the work disrupts your business as little as possible.',
+      },
+    ],
+  },
+  {
+    slug: 'metal-stud-framing',
+    category: 'commercial',
+    name: 'Metal stud framing',
+    short: 'Interior partitions, demising walls, soffits and bulkheads in light-gauge steel.',
+    title: 'Metal Stud Framing in Brevard County & Orlando',
+    description:
+      'Light-gauge metal stud framing for interior partitions, demising walls, soffits and bulkheads in Titusville, Brevard County and Orlando. Call (321) 890-7839.',
+    image: '/images/office-before.jpg',
+    imageAlt: 'Commercial office space framed with metal studs before drywall',
+    intro: [
+      'Most commercial interiors are framed in light-gauge steel: it is straight, it does not rot, and it is what inspectors and fire codes expect. We lay out and frame interior walls from your floor plan, including the door openings, soffits and blocking the other trades will need.',
+      'We frame interior, non-load-bearing walls. On tenant improvements and remodels we can work directly for the owner or as a framing subcontractor for your general contractor.',
+    ],
+    includes: [
+      'Interior partition walls and offices',
+      'Demising walls between tenant spaces',
+      'Soffits, bulkheads and ceiling framing',
+      'Door and window openings with headers',
+      'Wood or steel blocking for cabinets, grab bars and TVs',
+      'Furring walls over block and concrete',
+    ],
+    faqs: [
+      {
+        q: 'Do you work as a subcontractor for general contractors?',
+        a: 'Yes. We frame and finish on tenant improvements and remodels for general contractors, working from your drawings and schedule.',
+      },
+      {
+        q: 'Do you do structural or load-bearing framing?',
+        a: 'No. We frame interior, non-load-bearing walls, soffits and ceilings. Structural work stays with the building contractor and engineer of record.',
+      },
+      {
+        q: 'Can you frame fire-rated walls?',
+        a: 'Yes. Rated walls are framed and finished to the tested assembly specified on the drawings, including the stud gauge, spacing and board type it calls for.',
+      },
+    ],
+  },
+  {
+    slug: 'commercial-drywall-finishing',
+    category: 'commercial',
+    name: 'Commercial drywall & finishing',
+    short: 'Hanging, taping and Level 4–5 finishes, ready for paint.',
+    title: 'Commercial Drywall & Finishing in Brevard & Orlando',
+    description:
+      'Commercial drywall hanging, taping and Level 4–5 finishing for offices, retail and tenant buildouts in Titusville, Brevard County and Orlando. (321) 890-7839.',
+    image: '/images/retail-after.jpg',
+    imageAlt: 'Finished retail space with smooth painted drywall walls and a soffit',
+    intro: [
+      'Commercial lighting is unforgiving. Long walls under LED panels show every seam and screw head, so we finish to the level the space calls for, up to a Level 5 skim coat where the light is harsh.',
+      'We hang, tape, finish and prime, and we can paint so the space is ready for flooring and fixtures. That includes moisture-resistant board in wet areas and FRP panels in restaurant kitchens and back rooms.',
+    ],
+    includes: [
+      'Drywall hanging on metal or wood framing',
+      'Taping and finishing, Level 4 and Level 5',
+      'Fire-rated and moisture-resistant board',
+      'Soffits, bulkheads and corner bead',
+      'FRP wall panels for kitchens and restrooms',
+      'Primer and paint, ready for move-in',
+    ],
+    faqs: [
+      {
+        q: 'What is a Level 5 drywall finish?',
+        a: 'Level 5 adds a thin skim coat over the entire wall after taping and finishing. It is used where bright or angled light would show the joints, such as long hallways, lobbies and retail walls.',
+      },
+      {
+        q: 'Do you handle both framing and drywall?',
+        a: 'Yes. Doing the metal stud framing and the drywall finishing with one crew keeps the schedule tight and avoids finger-pointing between trades.',
+      },
+    ],
+  },
+);
+
+export const residentialServices = services.filter((s) => s.category !== 'commercial');
+export const commercialServices = services.filter((s) => s.category === 'commercial');
 
 export const getService = (slug: string) => services.find((s) => s.slug === slug);

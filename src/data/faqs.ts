@@ -1,7 +1,7 @@
 export const homeFaqs = [
   {
     q: 'What kind of work does B&M Property Construction Services do?',
-    a: 'We focus on residential remodeling and repairs: kitchen remodels, bathroom remodels, flooring, drywall repair, interior painting, carpentry and trim, and general home repairs. We do not build new homes.',
+    a: 'Most of our work is residential remodeling and repairs: kitchen remodels, bathroom remodels, flooring, drywall repair, interior painting, carpentry and trim, and general home repairs. We also do commercial interior work: metal stud framing, drywall finishing, and repairs and maintenance for offices and retail spaces. We do not build new homes or buildings.',
   },
   {
     q: 'What areas do you serve?',
@@ -25,7 +25,30 @@ export const homeFaqs = [
   },
 ];
 
-export const faqSchema = (items: { q: string; a: string }[]) => ({
+export const commercialFaqs = [
+  {
+    q: 'What commercial work do you do?',
+    a: 'Interior work in existing buildings and tenant spaces: metal stud framing, drywall hanging and finishing, and repairs and maintenance such as ceiling tiles, doors and hardware, drywall patches and punch lists.',
+  },
+  {
+    q: 'Do you work as a subcontractor for general contractors?',
+    a: 'Yes. We frame and finish on tenant improvements and remodels for general contractors, working from your drawings and schedule.',
+  },
+  {
+    q: 'Do you do new commercial construction?',
+    a: 'No. We do not take on ground-up construction or structural work. We handle interior framing, finishing and repairs inside existing buildings.',
+  },
+  {
+    q: 'Are you licensed and insured for commercial jobs?',
+    a: 'Yes. We are a licensed and insured Florida contractor and can provide a certificate of insurance before work starts.',
+  },
+  {
+    q: 'What areas do you cover for commercial work?',
+    a: 'Titusville and all of Brevard County, plus the Orlando area including Oviedo, Winter Park and Clermont.',
+  },
+];
+
+export const faqSchema =(items: { q: string; a: string }[]) => ({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: items.map((f) => ({

@@ -1,9 +1,10 @@
 ---
 import { site } from '../data/site';
-import { services } from '../data/services';
+import { residentialServices } from '../data/services';
 const path = Astro.url.pathname;
 const links = [
   { href: '/services/', label: 'Services' },
+  { href: '/commercial/', label: 'Commercial' },
   { href: '/service-areas/', label: 'Service areas' },
   { href: '/about/', label: 'About' },
   { href: '/contact/', label: 'Contact' },
@@ -34,10 +35,11 @@ const links = [
       <summary aria-label="Open menu"><span></span><span></span><span></span></summary>
       <div class="menu__panel">
         <a href="/">Home</a>
-        {links.map((l) => <a href={l.href}>{l.label}</a>)}
+        <a href="/services/">Services</a>
         <div class="menu__sub">
-          {services.map((s) => <a href={`/services/${s.slug}/`}>{s.name}</a>)}
+          {residentialServices.map((s) => <a href={`/services/${s.slug}/`}>{s.name}</a>)}
         </div>
+        {links.slice(1).map((l) => <a href={l.href}>{l.label}</a>)}
         <a class="btn btn--tape" href={site.phoneHref}>Call {site.phone}</a>
       </div>
     </details>
@@ -53,7 +55,7 @@ const links = [
     background: var(--tape); color: var(--ink); padding: 2px 8px; border-radius: 3px; line-height: 1.2;
   }
   .brand__name { font-size: .78rem; line-height: 1.15; font-weight: 600; color: #c9d6de; font-variation-settings: 'wdth' 90; }
-  .nav ul { list-style: none; display: flex; gap: 28px; margin: 0; padding: 0; }
+  .nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
   .nav a { color: #dfe7ec; text-decoration: none; font-weight: 600; padding: 6px 0; border-bottom: 2px solid transparent; }
   .nav a:hover, .nav a[aria-current] { color: #fff; border-bottom-color: var(--tape); }
   .hdr__call { min-height: 42px; padding: .5em 1em; }
@@ -70,7 +72,7 @@ const links = [
   .menu__sub { display: grid; padding: 0 0 8px 14px; border-left: 2px solid var(--tape); margin-bottom: 12px; }
   .menu__sub a { color: #c9d6de; text-decoration: none; padding: 7px 0; }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1040px) {
     .nav { display: none; }
     .menu { display: block; }
     .hdr__call span { display: none; }

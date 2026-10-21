@@ -5,20 +5,13 @@ import ContactForm from '../components/ContactForm.astro';
 import Faq from '../components/Faq.astro';
 import MapEmbed from '../components/MapEmbed.astro';
 import { site } from '../data/site';
-import { services } from '../data/services';
+import { residentialServices, commercialServices } from '../data/services';
 import { areas } from '../data/areas';
 import { homeFaqs, faqSchema } from '../data/faqs';
-import { img, imgPath } from '../data/images';
+import { imgPath } from '../data/images';
+import { homePairs, commercialPairs } from '../data/sliders';
 
-const pairs = [
-  { label: 'Kitchen', before: img('kitchen-before'), after: img('kitchen-after'),
-    beforeAlt: 'Dated 1980s kitchen with oak cabinets and laminate counters before remodeling',
-    afterAlt: 'The same kitchen after remodeling with white shaker cabinets and quartz counters' },
-  { label: 'Bathroom', before: img('bath-before'), after: img('bath-after'),
-    beforeAlt: 'Dated bathroom with pink tile and a fiberglass tub before remodeling',
-    afterAlt: 'The same bathroom after remodeling with a glass walk-in shower and double vanity' },
-];
-const [kitchen, bath, ...rest] = services;
+const [kitchen, bath, ...rest] = residentialServices;
 const brevard = areas.filter((a) => a.county === 'Brevard County');
 const orlando = areas.filter((a) => a.county !== 'Brevard County');
 ---
@@ -38,8 +31,7 @@ const orlando = areas.filter((a) => a.county !== 'Brevard County');
         </div>
       </div>
       <div class="hero__ba">
-        <BeforeAfter pairs={pairs} />
-        <p class="hero__hint">Drag the tape to compare.</p>
+        <BeforeAfter pairs={homePairs} id="home" eager dark />
       </div>
     </div>
   </section>
@@ -55,8 +47,8 @@ const orlando = areas.filter((a) => a.county !== 'Brevard County');
 
   <section class="section" id="services">
     <div class="wrap">
-      <h2>What we do</h2>
-      <p class="lede">We focus on the rooms and repairs homeowners actually need — not new construction. One crew, one point of contact, start to finish.</p>
+      <h2>Home remodeling and repairs</h2>
+      <p class="lede">We focus on the rooms and repairs homeowners actually need, not new construction. One crew, one point of contact, start to finish.</p>
 
       <div class="svc-feature">
         {[kitchen, bath].map((s) => (
@@ -78,6 +70,25 @@ const orlando = areas.filter((a) => a.county !== 'Brevard County');
             <span>{s.short}</span>
           </a>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section comm" id="commercial">
+    <div class="wrap comm__grid">
+      <BeforeAfter pairs={commercialPairs} id="commercial" dark />
+      <div class="comm__copy">
+        <h2>Commercial framing, finishing and repairs</h2>
+        <p>Our background is commercial interiors, and we still take that work on: metal stud framing and drywall for tenant spaces, and the repair lists that offices and retail units build up.</p>
+        <ul class="comm__list">
+          {commercialServices.map((s) => (
+            <li><a href={`/services/${s.slug}/`}>{s.name}</a><span>{s.short}</span></li>
+          ))}
+        </ul>
+        <div class="comm__ctas">
+          <a class="btn btn--tape" href="/commercial/#estimate">Request a commercial quote</a>
+          <a class="btn btn--ghost" href="/commercial/">Commercial services</a>
+        </div>
       </div>
     </div>
   </section>
@@ -141,10 +152,16 @@ const orlando = areas.filter((a) => a.county !== 'Brevard County');
   .hero__copy p { font-size: 1.15rem; }
   .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
   .hero__ctas .btn--ghost { color: #fff; }
-  .hero__ba :global(.ba__tab) { color: #fff; border-color: #4b6578; }
-  .hero__ba :global(.ba__tab[aria-pressed='true']) { background: var(--tape); color: var(--ink); border-color: var(--tape); }
-  .hero__ba :global(.ba__tabs) { float: left; }
-  .hero__hint { text-align: right; font-size: .9rem; color: #8fa5b3; margin: 14px 0 0; max-width: none; }
+  .comm { background: var(--ink); color: #d6e1e7; }
+  .comm__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(28px, 4vw, 56px); align-items: center; }
+  .comm h2 { color: #fff; }
+  .comm__list { list-style: none; padding: 0; margin: 8px 0 28px; border-top: 1px solid #2a4357; }
+  .comm__list li { display: grid; gap: 2px; padding: 12px 0; border-bottom: 1px solid #2a4357; }
+  .comm__list a { color: #fff; font-weight: 700; font-size: 1.08rem; text-decoration: none; }
+  .comm__list a:hover { color: var(--tape); }
+  .comm__list span { color: #9fb1bd; font-size: .95rem; }
+  .comm__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .comm__ctas .btn--ghost { color: #fff; }
 
   .facts { border-bottom: 1px solid var(--line); }
   .facts__row { display: grid; grid-template-columns: repeat(4, 1fr); }
@@ -196,7 +213,7 @@ const orlando = areas.filter((a) => a.county !== 'Brevard County');
   .est__phone a { color: var(--ink); text-decoration: none; }
 
   @media (max-width: 960px) {
-    .hero__grid, .areas, .est { grid-template-columns: 1fr; }
+    .hero__grid, .areas, .est, .comm__grid { grid-template-columns: 1fr; }
     .svc-list { grid-template-columns: 1fr 1fr; }
     .steps { grid-template-columns: 1fr 1fr; gap: 32px 0; }
     .steps li::after { display: none; }
