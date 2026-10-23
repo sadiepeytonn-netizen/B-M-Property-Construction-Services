@@ -7,6 +7,10 @@ const year = new Date().getFullYear();
 <footer class="ftr">
   <div class="wrap ftr__grid">
     <div>
+      <picture>
+        <source srcset="/images/logo-footer-white.webp" type="image/webp" />
+        <img class="ftr__logo" src="/images/logo-footer-white.webp" alt="" width="600" height="388" loading="lazy" />
+      </picture>
       <p class="ftr__name">{site.name}</p>
       <p>Kitchen and bathroom remodeling, flooring and home repairs, plus commercial framing, finishing and maintenance. Based in Titusville, working across Brevard County and the Orlando area.</p>
       <p>
@@ -44,6 +48,7 @@ const year = new Date().getFullYear();
   .ftr a { color: #e3ecf0; text-decoration: none; }
   .ftr a:hover { color: var(--tape); }
   .ftr__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
+  .ftr__logo { width: 220px; height: auto; margin-bottom: 18px; }
   .ftr__name { color: #fff; font-weight: 800; font-variation-settings: var(--wide); font-size: 1.15rem; }
   .ftr__h { color: #fff; font-weight: 700; margin-bottom: .6em; }
   .ftr__h--sub { margin-top: 1.4em; }

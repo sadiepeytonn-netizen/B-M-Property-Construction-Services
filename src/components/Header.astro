@@ -13,9 +13,10 @@ const links = [
 <header class="hdr">
   <div class="wrap hdr__in">
     <a class="brand" href="/" aria-label={`${site.name} home`}>
-      <!-- Replace with the logo: <img src="/logo.svg" alt="B&M Property Construction Services" width="160" height="48" /> -->
-      <span class="brand__mark" aria-hidden="true">B&amp;M</span>
-      <span class="brand__name">Property Construction<br />Services</span>
+      <picture>
+        <source srcset="/images/logo-header-white.webp" type="image/webp" />
+        <img class="brand__logo" src="/images/logo-header-white.png" alt="B&amp;M Property Construction Services" width="406" height="168" />
+      </picture>
     </a>
 
     <nav class="nav" aria-label="Main">
@@ -73,12 +74,9 @@ const links = [
 <style>
   .hdr { background: var(--ink); color: #fff; position: sticky; top: 0; z-index: 50; }
   .hdr__in { display: flex; align-items: center; gap: 24px; min-height: 72px; }
-  .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; margin-right: auto; }
-  .brand__mark {
-    font-weight: 900; font-variation-settings: 'wdth' 125; font-size: 1.6rem; letter-spacing: -.03em;
-    background: var(--tape); color: var(--ink); padding: 2px 8px; border-radius: 3px; line-height: 1.2;
-  }
-  .brand__name { font-size: .78rem; line-height: 1.15; font-weight: 600; color: #c9d6de; font-variation-settings: 'wdth' 90; }
+  .brand { display: flex; align-items: center; margin-right: auto; padding: 6px 0; flex-shrink: 0; }
+  .brand__logo { height: 58px; width: auto; display: block; }
+  @media (max-width: 480px) { .brand__logo { height: 48px; } }
   .nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
   .nav a { color: #dfe7ec; text-decoration: none; font-weight: 600; padding: 6px 0; border-bottom: 2px solid transparent; }
   .nav a:hover, .nav a[aria-current] { color: #fff; border-bottom-color: var(--tape); }
